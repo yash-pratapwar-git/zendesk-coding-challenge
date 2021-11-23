@@ -30,6 +30,13 @@ func main() {
 			services.ListAllData("https://zccutdallas.zendesk.com/api/v2/tickets.json?page=1&per_page=25")
 		case 2:
 			fmt.Println("\nOption 2 selected")
+			fmt.Println("Enter the Ticket ID ")
+			var ticketId int
+			_, err := fmt.Scanf("%d", &ticketId)
+			if err != nil {
+				fmt.Println("Please enter digit inputs")
+			}
+			services.SpecificTicketInfo("https://zccutdallas.zendesk.com/api/v2/tickets/{ticketID}.json", ticketId)
 		case 3:
 			exitFlag = true
 		default:

@@ -19,7 +19,6 @@ func GetHttpMethod(url string) io.ReadCloser {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// defer resp.Body.Close()
 
 	return resp.Body
 }

@@ -1,6 +1,6 @@
 package models
 
-type Ticket struct {
+type TicketDetails struct {
 	Id        int64  `json:"id"`
 	Subject   string `json:"subject"`
 	Submitter int64  `json:"submitter_id"`
@@ -8,7 +8,11 @@ type Ticket struct {
 }
 
 type TicketsList struct {
-	Tickets  []Ticket `json:"tickets"`
-	NextPage string   `json:"next_page"`
-	Count    int      `json:"count"`
+	Tickets  []TicketDetails `json:"tickets"`
+	NextPage string          `json:"next_page"`
+	Count    int             `json:"count"`
+}
+
+type SingleTicketResponse struct {
+	Ticket TicketDetails `json:"ticket"`
 }

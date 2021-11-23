@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/zendesk-coding-challenge/models"
 	"github.com/zendesk-coding-challenge/web"
@@ -46,4 +48,20 @@ func ListAllData(url string) {
 			fmt.Println("")
 		}
 	}
+}
+
+func SpecificTicketInfo(url string, ticketId int) {
+	url = strings.Replace(url, "{ticketID}", strconv.Itoa(ticketId), 1)
+
+	body := web.GetHttpMethod(url)
+	defer body.Close()
+
+	var ticket models.SingleTicketResponse
+
+	err := json.NewDecoder(body).Decode(&ticket)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(ticket.Ticket.Id, ". Ticket with subject ", ticket.Ticket.Subject, " created by ", ticket.Ticket.Submitter, " at ", ticket.Ticket.CreatedAt)
 }
