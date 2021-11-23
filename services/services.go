@@ -4,28 +4,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 
 	"github.com/zendesk-coding-challenge/models"
+	"github.com/zendesk-coding-challenge/web"
 )
 
 func ListAllData(url string) {
 	fmt.Println("\nPlease wait while we fetch the data")
 	var tickets models.TicketsList
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		fmt.Println("Error in creating new request : ", err)
-	}
 
-	req.SetBasicAuth("yxp200011@utdallas.edu", "Sonata@678")
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer resp.Body.Close()
-
-	err = json.NewDecoder(resp.Body).Decode(&tickets)
+	body := web.GetHttpMethod(url)
+	defer body.Close()
+	err := json.NewDecoder(body).Decode(&tickets)
 	if err != nil {
 		log.Fatal(err)
 	}
