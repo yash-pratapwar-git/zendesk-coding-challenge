@@ -2,26 +2,70 @@ package services
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"log"
+	"io"
+	"net/http"
 	"strconv"
 	"strings"
 
 	"github.com/zendesk-coding-challenge/models"
-	"github.com/zendesk-coding-challenge/web"
 )
 
-func ListAllData(url string) {
+// HTTPClient interface
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
+var (
+	Client HTTPClient
+)
+
+func init() {
+	Client = &http.Client{}
+}
+
+func GetHttpMethod(url string) (body io.ReadCloser, err error) {
+	// client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Println("Error in creating new request : ", err)
+		return nil, err
+	}
+
+	req.SetBasicAuth("yxp200011@utdallas.edu", "Sonata@678")
+	resp, err := Client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Println("Could not connect to the API")
+		fmt.Println("Reason : ", resp.Status)
+
+		return nil, errors.New("unsucessfull http call")
+	}
+
+	return resp.Body, nil
+}
+
+func ListAllData(url string) (err error) {
 	fmt.Println("\nPlease wait while we fetch the data")
 	var tickets models.TicketsList
 
-	body := web.GetHttpMethod(url)
-	defer body.Close()
-	err := json.NewDecoder(body).Decode(&tickets)
+	body, err := GetHttpMethod(url)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(" Error Occurred : ", err)
+		return err
 	}
-	fmt.Println(len(tickets.NextPage))
+	defer body.Close()
+	err = json.NewDecoder(body).Decode(&tickets)
+	if err != nil {
+		return err
+	}
+	fmt.Println("\nTOTAL NUMBER OF TICKETS : ", tickets.Count)
+	fmt.Println()
+
 	for _, val := range tickets.Tickets {
 		fmt.Println(val.Id, ". Ticket with subject ", val.Subject, " created by ", val.Submitter, " at ", val.CreatedAt)
 	}
@@ -42,26 +86,33 @@ func ListAllData(url string) {
 			fmt.Println("\nOption 1 selected")
 			ListAllData(tickets.NextPage)
 		case 2:
-			return
+			return nil
 		default:
 			fmt.Println("\nPlease provide valid option")
 			fmt.Println("")
 		}
 	}
+	return nil
 }
 
-func SpecificTicketInfo(url string, ticketId int) {
+func SpecificTicketInfo(url string, ticketId int) (err error) {
 	url = strings.Replace(url, "{ticketID}", strconv.Itoa(ticketId), 1)
 
-	body := web.GetHttpMethod(url)
+	body, err := GetHttpMethod(url)
+	if err != nil {
+		fmt.Println(" Error Occurred : ", err)
+		return
+	}
 	defer body.Close()
 
 	var ticket models.SingleTicketResponse
 
-	err := json.NewDecoder(body).Decode(&ticket)
+	err = json.NewDecoder(body).Decode(&ticket)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	fmt.Println(ticket.Ticket.Id, ". Ticket with subject ", ticket.Ticket.Subject, " created by ", ticket.Ticket.Submitter, " at ", ticket.Ticket.CreatedAt)
+
+	return nil
 }
