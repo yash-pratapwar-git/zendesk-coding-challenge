@@ -9,7 +9,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/zendesk-coding-challenge/constants"
 	"github.com/zendesk-coding-challenge/models"
+	"github.com/zendesk-coding-challenge/zendeskerrors"
 )
 
 // HTTPClient interface
@@ -30,27 +32,31 @@ func GetHttpMethod(url string) (body io.ReadCloser, err error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error in creating new request : ", err)
-		return nil, err
+		return nil, errors.New(zendeskerrors.ERR102)
 	}
 
-	req.SetBasicAuth("yxp200011@utdallas.edu", "Sonata@678")
+	req.SetBasicAuth(constants.UserName, constants.Password)
 	resp, err := Client.Do(req)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode == http.StatusUnauthorized {
+		return nil, errors.New(zendeskerrors.ERR101)
 	}
 
 	if resp.StatusCode != http.StatusOK {
 		fmt.Println("Could not connect to the API")
 		fmt.Println("Reason : ", resp.Status)
 
-		return nil, errors.New("unsucessfull http call")
+		return nil, errors.New(zendeskerrors.ERR103)
 	}
 
 	return resp.Body, nil
 }
 
 func ListAllData(url string) (err error) {
-	fmt.Println("\nPlease wait while we fetch the data")
+	fmt.Println("\n", constants.LoadingMessage)
 	var tickets models.TicketsList
 
 	body, err := GetHttpMethod(url)
@@ -71,26 +77,28 @@ func ListAllData(url string) (err error) {
 	}
 
 	if tickets.NextPage != "" {
-		fmt.Println("\nThere are more results. Enter your choice.")
-		fmt.Println("\n1. View Next Results")
-		fmt.Println("2. Main Menu")
 
-		var response int
-		_, err := fmt.Scanf("%d", &response)
-		if err != nil {
-			fmt.Println("Please enter digit inputs")
+		var exitFlag bool
+
+		for !exitFlag {
+			fmt.Println(constants.ListViewMenu)
+
+			var response int
+			_, err := fmt.Scanf("%d", &response)
+			if err != nil {
+				fmt.Println("Please enter digit inputs")
+			}
+
+			switch response {
+			case 1:
+				ListAllData(tickets.NextPage)
+			case 2:
+				return nil
+			default:
+				fmt.Println(constants.InValidInputMessage)
+			}
 		}
 
-		switch response {
-		case 1:
-			fmt.Println("\nOption 1 selected")
-			ListAllData(tickets.NextPage)
-		case 2:
-			return nil
-		default:
-			fmt.Println("\nPlease provide valid option")
-			fmt.Println("")
-		}
 	}
 	return nil
 }

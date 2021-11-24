@@ -3,45 +3,37 @@ package main
 import (
 	"fmt"
 
+	"github.com/zendesk-coding-challenge/constants"
 	"github.com/zendesk-coding-challenge/services"
 )
 
 func main() {
-	fmt.Println("\n**************   Welcome to the Ticket Viewer Application  *************")
+	fmt.Println(constants.WelcomeMessage)
 
 	var exitFlag bool
 
 	for !exitFlag {
 
-		fmt.Println("\nSelect an option :")
-		fmt.Println("\n1. List All Tickets")
-		fmt.Println("2. View Specific Ticket")
-		fmt.Println("3. Quit Appliaction")
-		fmt.Println("")
+		fmt.Println(constants.MainMenu)
 		var response int
-		_, err := fmt.Scanf("%d", &response)
-		if err != nil {
-			fmt.Println("Please enter digit inputs")
-		}
+		fmt.Scanf("%d", &response)
 
 		switch response {
 		case 1:
-			fmt.Println("\nOption 1 selected")
-			services.ListAllData("https://zccutdallas.zendesk.com/api/v2/tickets.json?page=1&per_page=25")
+			services.ListAllData(constants.ListAllTicketsURL)
 		case 2:
-			fmt.Println("\nOption 2 selected")
 			fmt.Println("Enter the Ticket ID ")
 			var ticketId int
 			_, err := fmt.Scanf("%d", &ticketId)
 			if err != nil {
-				fmt.Println("Please enter digit inputs")
+				fmt.Println(constants.InValidInputMessage)
+				continue
 			}
-			services.SpecificTicketInfo("https://zccutdallas.zendesk.com/api/v2/tickets/{ticketID}.json", ticketId)
+			services.SpecificTicketInfo(constants.ViewSingleTicketURL, ticketId)
 		case 3:
 			exitFlag = true
 		default:
 			fmt.Println("\nPlease provide valid option")
-			fmt.Println("")
 		}
 	}
 }
