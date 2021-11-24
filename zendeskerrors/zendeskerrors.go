@@ -1,5 +1,8 @@
 package zendeskerrors
 
-var ERR101 string = "Invalid Credentials"
-var ERR102 string = "Error while creating http request"
-var ERR103 string = "unsuccessfull request"
+//maintaining errors here
+const (
+	ERR101 string = "invalid credentials"
+	ERR102 string = "error while creating http request"
+	ERR103 string = "unsuccessfull request"
+)

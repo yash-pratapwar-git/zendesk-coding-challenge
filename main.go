@@ -12,12 +12,14 @@ func main() {
 
 	var exitFlag bool
 
+	//Maintaining the main menu message operation
 	for !exitFlag {
 
 		fmt.Println(constants.MainMenu)
 		var response int
 		fmt.Scanf("%d", &response)
 
+		//switch case to handle the user input
 		switch response {
 		case 1:
 			services.ListAllData(constants.ListAllTicketsURL)

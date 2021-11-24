@@ -27,24 +27,30 @@ func init() {
 	Client = &http.Client{}
 }
 
+//GetHttpMethod : function to make HTTP calls with GET method
 func GetHttpMethod(url string) (body io.ReadCloser, err error) {
-	// client := &http.Client{}
+	//creating new http request
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error in creating new request : ", err)
 		return nil, errors.New(zendeskerrors.ERR102)
 	}
 
+	//setting authorization headers
 	req.SetBasicAuth(constants.UserName, constants.Password)
+
+	//making the actual request
 	resp, err := Client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 
+	//checking if the user is authorized
 	if resp.StatusCode == http.StatusUnauthorized {
 		return nil, errors.New(zendeskerrors.ERR101)
 	}
 
+	//handling all the status codes other than 200 OK
 	if resp.StatusCode != http.StatusOK {
 		fmt.Println("Could not connect to the API")
 		fmt.Println("Reason : ", resp.Status)
@@ -55,6 +61,7 @@ func GetHttpMethod(url string) (body io.ReadCloser, err error) {
 	return resp.Body, nil
 }
 
+//ListAllData : function to print all the available tickets with pagination
 func ListAllData(url string) (err error) {
 	fmt.Println("\n", constants.LoadingMessage)
 	var tickets models.TicketsList
@@ -65,6 +72,8 @@ func ListAllData(url string) (err error) {
 		return err
 	}
 	defer body.Close()
+
+	//unmarshalling the response into Go structs
 	err = json.NewDecoder(body).Decode(&tickets)
 	if err != nil {
 		return err
@@ -72,10 +81,12 @@ func ListAllData(url string) (err error) {
 	fmt.Println("\nTOTAL NUMBER OF TICKETS : ", tickets.Count)
 	fmt.Println()
 
+	//displaying the tickets list
 	for _, val := range tickets.Tickets {
 		fmt.Println(val.Id, ". Ticket with subject ", val.Subject, " created by ", val.Submitter, " at ", val.CreatedAt)
 	}
 
+	//If there are more results available (pagination support)
 	if tickets.NextPage != "" {
 
 		var exitFlag bool
@@ -103,6 +114,7 @@ func ListAllData(url string) (err error) {
 	return nil
 }
 
+// SpecificTicketInfo : function to print the information of single ticket
 func SpecificTicketInfo(url string, ticketId int) (err error) {
 	url = strings.Replace(url, "{ticketID}", strconv.Itoa(ticketId), 1)
 
@@ -115,11 +127,13 @@ func SpecificTicketInfo(url string, ticketId int) (err error) {
 
 	var ticket models.SingleTicketResponse
 
+	//unmarshalling the response into Go structs
 	err = json.NewDecoder(body).Decode(&ticket)
 	if err != nil {
 		return err
 	}
 
+	//Displaying the single ticket information
 	fmt.Println(ticket.Ticket.Id, ". Ticket with subject ", ticket.Ticket.Subject, " created by ", ticket.Ticket.Submitter, " at ", ticket.Ticket.CreatedAt)
 
 	return nil
