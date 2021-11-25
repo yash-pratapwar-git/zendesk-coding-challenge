@@ -6,6 +6,7 @@ type TicketDetails struct {
 	Subject   string `json:"subject"`
 	Submitter int64  `json:"submitter_id"`
 	CreatedAt string `json:"created_at"`
+	Status    string `json:"status"`
 }
 
 //struct for the response of fetching all tickets

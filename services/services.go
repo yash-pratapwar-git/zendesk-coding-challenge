@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
+	"text/tabwriter"
 
 	"github.com/zendesk-coding-challenge/constants"
 	"github.com/zendesk-coding-challenge/models"
@@ -42,7 +44,7 @@ func GetHttpMethod(url string) (body io.ReadCloser, err error) {
 	//making the actual request
 	resp, err := Client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, errors.New(zendeskerrors.ERR104)
 	}
 
 	//checking if the user is authorized
@@ -81,35 +83,36 @@ func ListAllData(url string) (err error) {
 	fmt.Println("\nTOTAL NUMBER OF TICKETS : ", tickets.Count)
 	fmt.Println()
 
+	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+	fmt.Fprintln(w, constants.TableHeaders)
+
 	//displaying the tickets list
 	for _, val := range tickets.Tickets {
-		fmt.Println(val.Id, ". Ticket with subject ", val.Subject, " created by ", val.Submitter, " at ", val.CreatedAt)
+		fmt.Fprintln(w, val.Id, "\t", val.Subject, "\t", val.Submitter, "\t", val.CreatedAt, "\t", val.Status, "\t")
 	}
+	w.Flush()
 
 	//If there are more results available (pagination support)
 	if tickets.NextPage != "" {
+		fmt.Println(constants.ListViewMenu)
 
-		var exitFlag bool
-
-		for !exitFlag {
-			fmt.Println(constants.ListViewMenu)
-
-			var response int
-			_, err := fmt.Scanf("%d", &response)
-			if err != nil {
-				fmt.Println("Please enter digit inputs")
-			}
-
-			switch response {
-			case 1:
-				ListAllData(tickets.NextPage)
-			case 2:
-				return nil
-			default:
-				fmt.Println(constants.InValidInputMessage)
-			}
+		var response int
+		_, err := fmt.Scanf("%d", &response)
+		if err != nil {
+			response = 3
 		}
 
+		switch response {
+		case 1:
+			ListAllData(tickets.NextPage)
+		case 2:
+			return nil
+		default:
+			fmt.Println(constants.InValidInputMessage)
+		}
+
+	} else {
+		fmt.Println(constants.EndOfResultMessage)
 	}
 	return nil
 }
@@ -133,8 +136,15 @@ func SpecificTicketInfo(url string, ticketId int) (err error) {
 		return err
 	}
 
+	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+
 	//Displaying the single ticket information
-	fmt.Println(ticket.Ticket.Id, ". Ticket with subject ", ticket.Ticket.Subject, " created by ", ticket.Ticket.Submitter, " at ", ticket.Ticket.CreatedAt)
+	fmt.Fprintln(w, "ID : \t", ticket.Ticket.Id)
+	fmt.Fprintln(w, "SUBJECT : \t", ticket.Ticket.Subject)
+	fmt.Fprintln(w, "SUBMITTED BY : \t", ticket.Ticket.Submitter)
+	fmt.Fprintln(w, "CREATED AT : \t", ticket.Ticket.CreatedAt)
+	fmt.Fprintln(w, "STATUS : \t", ticket.Ticket.Status)
+	w.Flush()
 
 	return nil
 }

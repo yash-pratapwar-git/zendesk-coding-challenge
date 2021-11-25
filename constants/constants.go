@@ -15,6 +15,8 @@ const (
 	LoadingMessage      string = "Please wait while we fetch the data"
 	ListViewMenu        string = "\nTHERE ARE MORE RESULTS.\n\nPlease enter your choice.\nEnter 1 to view next results\nEnter 2 to go back to main menu\n"
 	InValidInputMessage string = "\nPlease provide digit input\n"
+	TableHeaders        string = "ID\tSUBJECT\tSUBMITTED BY\tCREATED AT\tSTATUS\t"
+	EndOfResultMessage  string = "\nYOU REACHED THE END OF THE RESULTS\n"
 )
 
 //constants used in unit tests
