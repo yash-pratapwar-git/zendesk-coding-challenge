@@ -17,7 +17,7 @@ func main() {
 
 		fmt.Println(constants.MainMenu)
 		var response int
-		fmt.Scanf("%d", &response)
+		fmt.Scanf("%d\n", &response)
 
 		//switch case to handle the user input
 		switch response {
@@ -26,7 +26,7 @@ func main() {
 		case 2:
 			fmt.Println("Enter the Ticket ID ")
 			var ticketId int
-			_, err := fmt.Scanf("%d", &ticketId)
+			_, err := fmt.Scanf("%d\n", &ticketId)
 			if err != nil {
 				fmt.Println(constants.InValidInputMessage)
 				continue

@@ -97,7 +97,7 @@ func ListAllData(url string) (err error) {
 		fmt.Println(constants.ListViewMenu)
 
 		var response int
-		_, err := fmt.Scanf("%d", &response)
+		_, err := fmt.Scanf("%d\n", &response)
 		if err != nil {
 			response = 3
 		}
