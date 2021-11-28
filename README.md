@@ -29,3 +29,8 @@ This is a solution for the coding challenge provided by ZenDesk for the summer 2
 2. Enter the following command to run the unit tests: ```go test```
 3. The last line of the terminal output should start with an "ok" message if all the test cases are passed.   
 4. ```services_test.go``` file contains all the unit tests.
+
+## Outputs
+![Main Menu](https://github.com/yash-pratapwar-git/zendesk-coding-challenge/blob/main/docs/result_1.png)
+![List All Tickets](https://github.com/yash-pratapwar-git/zendesk-coding-challenge/blob/main/docs/result_2.png)
+![View Single Ticket](https://github.com/yash-pratapwar-git/zendesk-coding-challenge/blob/main/docs/result_3.png)
