@@ -1,35 +1,27 @@
-# zendesk-coding-challenge
 
-This is a solution for the "intern coding challenge" given by ZenDesk.
+# ZENDESK-CODING CHALLENGE INTERN 2022
 
-# Requirements
+This is a solution for the coding challenge provided by ZenDesk for the summer 2022 internship.
 
-Go (Golang) - Can be installed from https://go.dev/doc/install
-Preferred OS - Windows (It is comparatively easy to setup go on windows. If you have any other OS,  that is fine)
+## Requirements
+1. Go (golang) - This can be downloaded from [https://go.dev/doc/install](). Please follow the steps for your OS mentioned on [https://go.dev/doc/install](this page). 
 
-# Setting up the project locally
+## Setting up GO environment in your OS
+### (Preferred OS is windows - because of the simplicity of installation)
+1. WINDOWS - Just install Go from the downloaded .msi file (from the above step)
+2. LINUX, MAC - Need to set environment paths mentioned here [https://go.dev/doc/install]()
 
-Step 1 - Setup Go envioronment on your local machine - 
+## Clone this repository
+1. Open your home directory and create new folder with the name ```go```
+2. Inside ```go``` folder, create new folder ```github.com```
+3. Open ```github.com``` folder and clone this repository there.
 
-I have mentioned steps here to setup the GO envioronment on WINDOWS machines. However if you are using any other OS such as linux or mac, this project should work there as well.
+## Usage
+1. Open the terminal at ```/go/github.com/zendesk-coding-challenge``` level
+2. Enter the following command to install dependencies: ```go get```
+3. Enter the following command to execute the program: ```go run main.go```
 
-WINDOWS - https://www.geeksforgeeks.org/how-to-install-go-on-windows/
-
-Step 2 - Clone this repository
-    1. Go to your home directory
-    2. Open to go folder
-    3. Open src folder
-    4. Create the folder with the name - "github.com"
-    5. open github.com folder
-    6. Clone the repository at this level
-
-Step 3 - Starting the application
-
-    1. Go to /zendesk-coding-challenge directory
-    2. Enter the following command - go run main.go
-
-# Running unit tests
-
-    1. go to /zendesk-coding-challenge/services directory level
-    2. Enter the following command - go test -v
-    3. Last line of the terminal output should start with ok messsage if all the test cases are passed
+## Testing
+1. Open the terminal at ```/go/github.com/zendesk-coding-challenge/services``` level.
+2. Enter the following command to run the unit tests: ```go test```
+3. The last line of the terminal output should start with an "ok" message if all the test cases are passed.   
