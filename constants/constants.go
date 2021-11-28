@@ -2,8 +2,8 @@ package constants
 
 //Authorization variables
 const (
-	UserName string = "yxp200011@utdallas.edu"
-	Password string = "Sonata@678"
+	UserName string = ""
+	Password string = ""
 )
 
 //constants used in all packages are maintained here
